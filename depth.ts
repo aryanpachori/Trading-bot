@@ -12,7 +12,9 @@ export class DepthManager {
     this.market = market;
     this.bids = {};
     this.asks = {};
-    setInterval(() => [this.pollmarkets()], 3000);
+    setInterval(() => {
+      this.pollmarkets();
+    }, 3000);
   }
 
   async pollmarkets() {
@@ -21,5 +23,19 @@ export class DepthManager {
     );
     this.bids = depth.data.bids;
     this.asks = depth.data.asks;
+  }
+
+  getReleventDepth() {
+    let highestBid = -100;
+    let lowestAsk = 10000000;
+    const BidPrices = Object.keys(this.bids).map((x) => parseFloat(x));
+    const AskPrices = Object.keys(this.asks).map((x) => parseFloat(x));
+    highestBid = Math.max(...BidPrices);
+    lowestAsk = Math.min(...AskPrices);
+
+    return {
+      highestBid,
+      lowestAsk,
+    };
   }
 }
